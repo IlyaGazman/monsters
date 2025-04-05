@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pokémon Red 3D</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Basic styles to prevent scrollbars and ensure full viewport usage */
+        body { margin: 0; overflow: hidden; background-color: #000; }
+        canvas { display: block; } /* Prevent potential spacing issues */
+    </style>
+</head>
+<body>
+    <!-- Game container where the Three.js canvas will be rendered -->
+    <div id="game-container"></div>
+
+    <!-- UI Elements for Mobile Controls -->
+    <div id="ui-controls" class="mobile-only">
+        <div id="dpad">
+            <button id="dpad-up" class="dpad-button">▲</button>
+            <button id="dpad-left" class="dpad-button">◀</button>
+            <button id="dpad-right" class="dpad-button">▶</button>
+            <button id="dpad-down" class="dpad-button">▼</button>
+        </div>
+        <div id="action-buttons">
+            <button id="button-a" class="action-button">A</button>
+            <button id="button-b" class="action-button">B</button>
+        </div>
+    </div>
+
+    <script type="importmap">
+{
+    "imports": {
+        "three": "/vendor/three/build/three.module.js"
+    }
+}
+</script>
+    <!-- Using CDN for Three.js for simplicity in this example -->
+    <!-- In a production environment, consider bundling or local hosting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.163.0/three.min.js"></script>
+
+    <!-- Game Scripts -->
+    <!-- Using ES6 Modules -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

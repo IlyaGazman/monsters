@@ -1,0 +1,162 @@
+/* Basic reset and body styling */
+body {
+    margin: 0;
+    overflow: hidden; /* Prevent scrollbars */
+    font-family: sans-serif;
+    background-color: #000;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; /* Ensure body takes full height */
+}
+
+#game-container {
+    width: 100%;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+    position: relative; /* Needed for absolute positioning of UI */
+    overflow: hidden; /* Ensure canvas stays within container */
+}
+
+canvas {
+    display: block; /* Remove potential bottom spacing */
+}
+
+/* Mobile-First: Hide mobile controls by default */
+#ui-controls {
+    display: none;
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    padding: 0 20px;
+    box-sizing: border-box;
+    z-index: 10; /* Ensure controls are above the canvas */
+    user-select: none; /* Prevent text selection */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE/Edge */
+    touch-action: manipulation; /* Improve touch responsiveness */
+}
+
+/* Style controls container */
+#dpad, #action-buttons {
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap if needed */
+    gap: 10px; /* Spacing between buttons */
+}
+
+#dpad {
+    left: 20px;
+    width: 120px; /* Adjust as needed */
+    height: 120px; /* Adjust as needed */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    gap: 5px;
+}
+
+#action-buttons {
+    right: 20px;
+    flex-direction: column; /* Stack A/B buttons */
+    width: 60px; /* Adjust as needed */
+    align-items: center;
+}
+
+.dpad-button, .action-button {
+    background-color: rgba(128, 128, 128, 0.7); /* Semi-transparent grey */
+    border: 2px solid rgba(255, 255, 255, 0.8);
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    border-radius: 50%; /* Circular buttons */
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.1s ease;
+    width: 40px; /* Fixed size for grid calculation */
+    height: 40px; /* Fixed size for grid calculation */
+    box-sizing: border-box;
+}
+
+/* D-pad grid positioning */
+#dpad-up { grid-column: 2; grid-row: 1; }
+#dpad-left { grid-column: 1; grid-row: 2; }
+#dpad-right { grid-column: 3; grid-row: 2; }
+#dpad-down { grid-column: 2; grid-row: 3; }
+
+/* Action button specific styles */
+.action-button {
+    width: 50px;
+    height: 50px;
+}
+
+/* Visual feedback for touch/press */
+.dpad-button:active, .action-button:active {
+    background-color: rgba(200, 200, 200, 0.8);
+    border-color: rgba(255, 255, 255, 1);
+}
+
+/* Media Query for Mobile Devices (target touch screens) */
+/* Coarse pointer suggests touch capability */
+@media (pointer: coarse) {
+    #ui-controls {
+        display: block; /* Show controls only on touch devices */
+    }
+    .mobile-only {
+        display: block; /* Ensure this specific class shows */
+    }
+}
+
+/* Desktop styles (optional overrides if needed) */
+@media (pointer: fine) {
+    /* Hide mobile controls on devices with fine pointers (mouse) */
+    #ui-controls {
+        display: none;
+    }
+    .mobile-only {
+        display: none; /* Ensure this specific class hides */
+    }
+    /* Optionally add desktop-specific UI or hints */
+    body::after {
+        content: 'Use WASD/Arrow Keys and Space/Enter';
+        position: absolute;
+        bottom: 10px;
+        left: 10px;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.8em;
+        z-index: 5; /* Below potential game UI, above background */
+    }
+}
+
+/* Responsive adjustments for smaller screens if needed */
+@media (max-width: 400px) {
+    #dpad {
+        width: 100px;
+        height: 100px;
+    }
+    .dpad-button {
+        width: 30px;
+        height: 30px;
+        font-size: 1.2em;
+    }
+    #action-buttons {
+        width: 50px;
+    }
+    .action-button {
+        width: 40px;
+        height: 40px;
+        font-size: 1.2em;
+    }
+    #ui-controls {
+        bottom: 10px;
+        padding: 0 10px;
+    }
+    #dpad { left: 10px; }
+    #action-buttons { right: 10px; }
+}
