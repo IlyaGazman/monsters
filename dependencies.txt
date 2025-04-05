@@ -1,5 +1,1 @@
-# Global scope dependencies
-module three@0.163.0
-
-# Module dependencies
-# None currently required as modules will be local ES6 modules
+three@0.163.0
