@@ -1,6 +1,5 @@
-{
-  "dependencies": {
-    "three": "^0.128.0",
-    "tween.js": "^16.6.0"
-  }
-}
+# Global scope dependencies (e.g., loaded via <script> tag)
+three@0.160.0 # Used for 3D rendering
+
+# Module dependencies (e.g., imported via ES6 import)
+# module some-module@1.2.3 # No module dependencies specified beyond three.js global
