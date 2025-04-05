@@ -1,1 +1,6 @@
-three@0.163.0
+{
+  "dependencies": {
+    "three": "^0.128.0",
+    "tween.js": "^16.6.0"
+  }
+}
