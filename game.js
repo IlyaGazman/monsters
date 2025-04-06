@@ -112,32 +112,54 @@ class CubeCounterGame {
      * Generate parameters for the current level.
      * 
      * New logic:
-     * - The cube pile at position 0,0 (pile "00") is always the tallest.
-     * - Its height is set to the maximum size for the current round: (current round × 2/3), rounded up.
-     * - The other two piles get a random size between the minimum size (current round × 1/6, rounded up)
-     *   and one less than the maximum size (if possible), to guarantee that pile "00" is the tallest.
+     * - Total number of cubes across the three piles is at most the current level.
+     * - The cube pile at position "00" (top left) is always the tallest.
+     * - We attempt to give pile "00" a height close to the target maximum (current round × 2/3) 
+     *   but also ensure that there is enough remaining cubes to assign at least a minimum (current round/6)
+     *   to each of the other two piles. 
+     * - The other two piles are then chosen so that their sum exactly equals the remaining cubes,
+     *   with each between the minimum and strictly less than pile "00" to guarantee the sorting order.
      */
     generateLevel() {
-        // Calculate maximum and minimum cube counts for a column based on the level.
-        const maxSize = Math.ceil(this.level * 2 / 3) || 1;
-        const minSize = Math.ceil(this.level / 6) || 1;
-
-        // Helper function to get a random integer between min and max (inclusive)
-        const getRandomInt = (min, max) => {
-            return Math.floor(Math.random() * (max - min + 1)) + min;
-        };
-
-        // Pile at "00" (top left) is assigned the maximum size.
-        const pile00Count = maxSize;
-
-        // For the other two piles, if possible, choose a random number less than the maximum
-        const upperBound = (maxSize > minSize) ? maxSize - 1 : minSize;
-        const pile01Count = getRandomInt(minSize, upperBound);
-        const pile10Count = getRandomInt(minSize, upperBound);
-
-        this.correctAnswer = pile00Count + pile01Count + pile10Count;
-        this.pileCounts = { '00': pile00Count, '01': pile01Count, '10': pile10Count };
-
+        const L = this.level;
+        if (L < 3) {
+            // For very small levels, assign all cubes to pile "00"
+            this.pileCounts = { '00': L, '01': 0, '10': 0 };
+            this.correctAnswer = L;
+        } else {
+            const minSize = Math.ceil(L / 6);
+            const targetMax = Math.ceil(L * 2 / 3);
+            // p00 should be at least minSize+1 to be strictly taller than the others.
+            // Also ensure that there are at least 2*minSize cubes available for the other two piles.
+            let p00 = Math.max(minSize + 1, Math.min(targetMax, L - 2 * minSize));
+            let remaining = L - p00;
+            let possiblePairs = [];
+            // The other two piles (p01 and p10) must be at least minSize,
+            // and less than p00 (to guarantee pile "00" is tallest).
+            // They must sum to the remaining cubes.
+            for (let a = minSize; a <= p00 - 1; a++) {
+                let b = remaining - a;
+                if (b >= minSize && b <= p00 - 1) {
+                    possiblePairs.push([a, b]);
+                }
+            }
+            
+            // In case no valid pair is found (edge cases), fallback to minimal distribution.
+            if (possiblePairs.length === 0) {
+                p00 = L - 2 * minSize;
+                remaining = L - p00;
+                possiblePairs = [[minSize, remaining - minSize]];
+            }
+            
+            // Randomly select one possible distribution for the other two piles.
+            const pair = possiblePairs[Math.floor(Math.random() * possiblePairs.length)];
+            const p01 = pair[0];
+            const p10 = pair[1];
+            
+            this.pileCounts = { '00': p00, '01': p01, '10': p10 };
+            this.correctAnswer = p00 + p01 + p10;
+        }
+        
         // Generate answer options: one correct, three sequential incorrect options.
         this.options = this.generateOptions(this.correctAnswer);
     }
