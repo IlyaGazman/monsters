@@ -1,0 +1,92 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; /* Prevent scrolling */
+    font-family: sans-serif;
+    background-color: #f0f0f0;
+    color: #333;
+    touch-action: manipulation; /* Prevent default touch actions like zoom */
+    -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
+}
+
+#game-container {
+    width: 100%;
+    height: 100%;
+    position: fixed; /* Fix canvas behind UI */
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+#ui-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2; /* Place UI above canvas */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(240, 240, 240, 0.8); /* Semi-transparent background */
+}
+
+#level-display, #message-display {
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+#options-container {
+    display: flex;
+    flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+    justify-content: center;
+    gap: 10px; /* Spacing between buttons */
+}
+
+.option-button {
+    padding: 10px 20px;
+    font-size: 1.1em;
+    cursor: pointer;
+    border: 2px solid #555;
+    border-radius: 5px;
+    background-color: #fff;
+    color: #333;
+    min-width: 60px; /* Ensure buttons have a minimum size */
+    text-align: center;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+/* Basic button interaction feedback */
+.option-button:hover {
+    background-color: #eee;
+}
+
+.option-button:active {
+    transform: scale(0.95);
+    background-color: #ddd;
+}
+
+/* Media query for larger screens (e.g., tablets/desktops) */
+@media (min-width: 600px) {
+    #level-display, #message-display {
+        font-size: 1.5em;
+    }
+
+    .option-button {
+        padding: 15px 30px;
+        font-size: 1.3em;
+        min-width: 80px;
+    }
+
+     #ui-container {
+        padding: 20px;
+     }
+}

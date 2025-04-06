@@ -1,5 +1,1 @@
-# Global scope dependencies (e.g., loaded via <script> tag)
-three@0.160.0
-
-# Module dependencies (e.g., imported via ES6 import)
-# module some-module@1.2.3
+three@0.157.0
