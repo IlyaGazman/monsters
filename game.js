@@ -1,4 +1,4 @@
-// Ensure THREE is available globally via the included script tag
+ // Ensure THREE is available globally via the included script tag
 const THREE = window.THREE;
 
 /**
@@ -167,7 +167,6 @@ class CubeCounterGame {
              if (i > 10) break;
         }
 
-
         // Convert Set to array and shuffle
         const optionsArray = Array.from(options);
         for (let i = optionsArray.length - 1; i > 0; i--) {
@@ -187,8 +186,8 @@ class CubeCounterGame {
         }
 
         const cubeSize = 0.8; // Size of each cube
-        const gap = 0.05; // Small gap between cubes
-        const pileSpacing = 2; // Increased distance between pile centers for better separation
+        const gap = 0.0; // Set gap to zero for cubes to be stacked with no space between them
+        const pileSpacing = 2; // Distance between pile centers for better separation
 
         // Create materials with outlines for better visibility
         const outlineColor = 0x000000; // Black outline
@@ -225,7 +224,7 @@ class CubeCounterGame {
                 cube.add(edges); // Add outline to cube
                 
                 // Starting position (high above final position for animation)
-                const finalY = (cubeSize / 2) + i * (cubeSize + gap); // Final stacked position
+                const finalY = (cubeSize / 2) + i * (cubeSize + gap); // Final stacked position with no gap
                 cube.position.set(
                     offsetX,
                     finalY + 10, // Start higher for drop animation
