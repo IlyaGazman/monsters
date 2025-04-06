@@ -17,6 +17,7 @@ class CubeCounterGame {
         this.correctAnswer = 0;
         this.options = [];
         this.isProcessingAnswer = false; // Prevent multiple clicks during feedback
+        this.animatingCubes = false; // Flag for cube drop animation
 
         // Basic device check (presence of touch events)
         this.isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -79,7 +80,7 @@ class CubeCounterGame {
             button.addEventListener(eventType, (e) => {
                 // Prevent interfering browser actions on touch
                 if (this.isTouchDevice) e.preventDefault();
-                if (this.isProcessingAnswer) return; // Ignore clicks if processing
+                if (this.isProcessingAnswer || this.animatingCubes) return; // Ignore clicks if processing
 
                 const choiceIndex = parseInt(e.target.dataset.choice, 10);
                 this.checkAnswer(this.options[choiceIndex], button);
@@ -101,15 +102,41 @@ class CubeCounterGame {
      * Generate parameters for the current level.
      */
     generateLevel() {
-        // Determine the number of blocks for each pile
-        const baseMax = 5; // Minimum blocks possible across piles increases slightly
-        const levelMultiplier = 2; // How much max blocks increase per level
-        const maxBlocksPerPile = Math.floor(baseMax + this.level * levelMultiplier / 3); // Approx max per pile
+        // Cube count limit for current level (max number of cubes = level number)
+        const maxCubesForLevel = this.level;
+        
+        // Generate random cube distributions for three piles,
+        // but ensure the total doesn't exceed the level number
+        let totalCubes = 0;
+        let pile00Count = 0;
+        let pile01Count = 0;
+        let pile10Count = 0;
 
-        // Ensure pile00 is the tallest (or equal)
-        let pile00Count = Math.floor(Math.random() * maxBlocksPerPile) + 1; // Must have at least 1
-        let pile01Count = Math.floor(Math.random() * (pile00Count)) + 1; // Max is pile00Count
-        let pile10Count = Math.floor(Math.random() * (pile00Count)) + 1; // Max is pile00Count
+        // If level is 1, we must have exactly 1 cube total
+        if (this.level === 1) {
+            // Place the single cube randomly in one of the piles
+            const randomPile = Math.floor(Math.random() * 3);
+            if (randomPile === 0) pile00Count = 1;
+            else if (randomPile === 1) pile01Count = 1;
+            else pile10Count = 1;
+            totalCubes = 1;
+        } else {
+            // For levels 2+, distribute cubes randomly but ensure total <= level number
+            // We need at least one cube
+            pile00Count = Math.ceil(Math.random() * Math.min(this.level, 3));
+            totalCubes = pile00Count;
+            
+            // Add to other piles if we haven't reached the max for the level
+            if (totalCubes < maxCubesForLevel) {
+                pile01Count = Math.floor(Math.random() * (maxCubesForLevel - totalCubes + 1));
+                totalCubes += pile01Count;
+            }
+            
+            if (totalCubes < maxCubesForLevel) {
+                pile10Count = Math.min(maxCubesForLevel - totalCubes, Math.floor(Math.random() * 3) + 1);
+                totalCubes += pile10Count;
+            }
+        }
 
         this.correctAnswer = pile00Count + pile01Count + pile10Count;
         this.pileCounts = { '00': pile00Count, '01': pile01Count, '10': pile10Count };
@@ -150,7 +177,6 @@ class CubeCounterGame {
         return optionsArray;
     }
 
-
     /**
      * Clears previous cubes and renders new ones based on pileCounts.
      */
@@ -162,43 +188,81 @@ class CubeCounterGame {
 
         const cubeSize = 0.8; // Size of each cube
         const gap = 0.05; // Small gap between cubes
-        const pileSpacing = 1.5; // Distance between pile centers
+        const pileSpacing = 2; // Increased distance between pile centers for better separation
 
-        // Define materials for each pile
+        // Create materials with outlines for better visibility
+        const outlineColor = 0x000000; // Black outline
+        const outlineThickness = 0.02; // Outline thickness
+        
+        // Define materials for each pile (with outline effect)
         const materials = [
-            new THREE.MeshStandardMaterial({ color: 0xff0000 }), // Red for pile 0,0
-            new THREE.MeshStandardMaterial({ color: 0x00ff00 }), // Green for pile 0,1
-            new THREE.MeshStandardMaterial({ color: 0x0000ff })  // Blue for pile 1,0
+            [
+                new THREE.MeshStandardMaterial({ color: 0xff0000 }), // Red for pile 0,0
+                new THREE.LineBasicMaterial({ color: outlineColor, linewidth: 2 })
+            ],
+            [
+                new THREE.MeshStandardMaterial({ color: 0x00ff00 }), // Green for pile 0,1
+                new THREE.LineBasicMaterial({ color: outlineColor, linewidth: 2 })
+            ],
+            [
+                new THREE.MeshStandardMaterial({ color: 0x0000ff }), // Blue for pile 1,0
+                new THREE.LineBasicMaterial({ color: outlineColor, linewidth: 2 })
+            ]
         ];
 
         const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+        const edgesGeometry = new THREE.EdgesGeometry(geometry); // For outline
 
-        // Function to create a single pile
-        const createPile = (count, material, offsetX, offsetZ) => {
+        // Function to create a single pile with animation
+        const createPile = (count, materials, offsetX, offsetZ) => {
+            const [cubeMaterial, edgeMaterial] = materials;
+            const pileCubes = [];
+            
             for (let i = 0; i < count; i++) {
-                const cube = new THREE.Mesh(geometry, material);
-                // Position cubes vertically, starting from slightly above ground (y=0)
+                // Create cube with outline
+                const cube = new THREE.Mesh(geometry, cubeMaterial);
+                const edges = new THREE.LineSegments(edgesGeometry, edgeMaterial);
+                cube.add(edges); // Add outline to cube
+                
+                // Starting position (high above final position for animation)
+                const finalY = (cubeSize / 2) + i * (cubeSize + gap); // Final stacked position
                 cube.position.set(
                     offsetX,
-                    (cubeSize / 2) + i * (cubeSize + gap), // Stack vertically
+                    finalY + 10, // Start higher for drop animation
                     offsetZ
                 );
-                 // Add slight random rotation to each cube for visual interest
+                
+                // Add slight random rotation for visual interest
                 cube.rotation.x = Math.random() * 0.1 - 0.05;
                 cube.rotation.y = Math.random() * 0.1 - 0.05;
                 cube.rotation.z = Math.random() * 0.1 - 0.05;
+                
+                // Animation properties
+                cube.userData = {
+                    finalY: finalY,
+                    animationDelay: 100 * i, // Stagger animation
+                    animationStartTime: null,
+                    animationDuration: 500, // 500ms animation (half second)
+                    isAnimating: true
+                };
+                
                 this.cubeGroup.add(cube);
+                pileCubes.push(cube);
             }
+            
+            return pileCubes;
         };
 
-        // Create piles based on counts and positions
-        // Pile 0,0 (Tallest) at origin (relative to group)
-        createPile(this.pileCounts['00'], materials[0], 0, 0);
-        // Pile 0,1 (Back) at (0, 0, -pileSpacing)
-        createPile(this.pileCounts['01'], materials[1], 0, -pileSpacing);
-        // Pile 1,0 (Right) at (pileSpacing, 0, 0)
-        createPile(this.pileCounts['10'], materials[2], pileSpacing, 0);
+        // Create all the cubes for animation
+        this.animatingCubes = true;
+        this.cubesToAnimate = [
+            ...createPile(this.pileCounts['00'], materials[0], 0, 0),                    // Pile 0,0 (Tallest) at origin
+            ...createPile(this.pileCounts['01'], materials[1], 0, -pileSpacing),         // Pile 0,1 (Back)
+            ...createPile(this.pileCounts['10'], materials[2], pileSpacing, 0)           // Pile 1,0 (Right)
+        ];
 
+        // Start animation timers
+        this.animationStartTime = performance.now();
 
         // Rotate the entire group by -45 degrees (PI/4 radians) around the Y axis
         this.cubeGroup.rotation.y = -Math.PI / 4;
@@ -206,7 +270,6 @@ class CubeCounterGame {
         // Center the group slightly to improve camera view
         this.cubeGroup.position.set(-pileSpacing / 2, 0, pileSpacing / 2);
     }
-
 
     /**
      * Update UI text elements.
@@ -274,8 +337,52 @@ class CubeCounterGame {
     animate() {
         requestAnimationFrame(this.animate.bind(this));
 
-        // Optional: Add subtle rotation or other animations here if desired
-        // this.cubeGroup.rotation.y += 0.002; // Example: Slow rotation
+        // Animate cubes dropping
+        const currentTime = performance.now();
+        
+        if (this.animatingCubes && this.cubesToAnimate) {
+            let allAnimationsComplete = true;
+            
+            this.cubesToAnimate.forEach(cube => {
+                if (cube.userData.isAnimating) {
+                    // Start the animation if not already started
+                    if (cube.userData.animationStartTime === null) {
+                        if (currentTime >= this.animationStartTime + cube.userData.animationDelay) {
+                            cube.userData.animationStartTime = currentTime;
+                        }
+                    }
+                    
+                    // Continue animation if it has started
+                    if (cube.userData.animationStartTime !== null) {
+                        const elapsed = currentTime - cube.userData.animationStartTime;
+                        const progress = Math.min(elapsed / cube.userData.animationDuration, 1);
+                        
+                        // Easing function for smoother animation (ease-out)
+                        const easedProgress = 1 - Math.pow(1 - progress, 3);
+                        
+                        // Update position
+                        const startY = cube.userData.finalY + 10;
+                        const targetY = cube.userData.finalY;
+                        cube.position.y = startY - (startY - targetY) * easedProgress;
+                        
+                        // Animation complete
+                        if (progress >= 1) {
+                            cube.userData.isAnimating = false;
+                            cube.position.y = targetY; // Ensure exact final position
+                        } else {
+                            allAnimationsComplete = false;
+                        }
+                    } else {
+                        allAnimationsComplete = false;
+                    }
+                }
+            });
+            
+            // All animations complete
+            if (allAnimationsComplete) {
+                this.animatingCubes = false;
+            }
+        }
 
         this.renderer.render(this.scene, this.camera);
     }
