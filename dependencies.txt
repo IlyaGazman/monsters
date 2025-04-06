@@ -1,5 +1,5 @@
 # Global scope dependencies (e.g., loaded via <script> tag)
-three@0.160.0 # Used for 3D rendering via WebGL/Canvas
+three@0.160.0
 
 # Module dependencies (e.g., imported via ES6 import)
-# No module dependencies required for this implementation
+# module some-module@1.2.3
