@@ -44,10 +44,10 @@ class CubeCounterGame {
         // Camera
         const aspect = this.container.clientWidth / this.container.clientHeight;
         this.camera = new THREE.PerspectiveCamera(60, aspect, 0.1, 1000);
-        // Position camera for a good view, slightly elevated and tilted down
-        this.camera.position.set(5, 4, 5); // Position adjusted for better view
+        // Save a base camera position to adjust zoom each level
+        this.cameraBasePosition = new THREE.Vector3(5, 4, 5);
+        this.camera.position.copy(this.cameraBasePosition);
         this.camera.lookAt(0, 0.5, 0); // Look towards the center base of piles (adjust Y slightly up)
-
 
         // Renderer
         this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -94,6 +94,16 @@ class CubeCounterGame {
     startGame() {
         this.isProcessingAnswer = false; // Allow input for new level
         this.generateLevel();
+        
+        // Adjust camera to zoom out a little and shift to show bottom cubes.
+        // The higher the level, the further the camera steps back.
+        let zoomFactor = 1 + 0.1 * (this.level - 1); // Increase distance by 10% per level
+        let newCamPos = this.cameraBasePosition.clone().multiplyScalar(zoomFactor);
+        // Lower the camera slightly to show more of the bottom of the piles.
+        newCamPos.y -= (this.level - 1) * 0.3;
+        this.camera.position.copy(newCamPos);
+        this.camera.lookAt(0, 0.5, 0);
+
         this.renderCubes();
         this.updateUI();
     }
@@ -186,8 +196,9 @@ class CubeCounterGame {
         }
 
         const cubeSize = 0.8; // Size of each cube
-        const gap = 0.0; // Set gap to zero for cubes to be stacked with no space between them
-        const pileSpacing = 2; // Distance between pile centers for better separation
+        const gap = 0.0; // No gap between cubes in a column
+        // Set pileSpacing equal to cubeSize for adjacent columns with no gap.
+        const pileSpacing = cubeSize;
 
         // Create materials with outlines for better visibility
         const outlineColor = 0x000000; // Black outline
@@ -255,9 +266,9 @@ class CubeCounterGame {
         // Create all the cubes for animation
         this.animatingCubes = true;
         this.cubesToAnimate = [
-            ...createPile(this.pileCounts['00'], materials[0], 0, 0),                    // Pile 0,0 (Tallest) at origin
-            ...createPile(this.pileCounts['01'], materials[1], 0, -pileSpacing),         // Pile 0,1 (Back)
-            ...createPile(this.pileCounts['10'], materials[2], pileSpacing, 0)           // Pile 1,0 (Right)
+            ...createPile(this.pileCounts['00'], materials[0], 0, 0),                    // Pile 0,0 at origin
+            ...createPile(this.pileCounts['01'], materials[1], 0, -pileSpacing),         // Pile 0,1 behind
+            ...createPile(this.pileCounts['10'], materials[2], pileSpacing, 0)           // Pile 1,0 to the right
         ];
 
         // Start animation timers
@@ -313,8 +324,6 @@ class CubeCounterGame {
 
             // Reset to same level or end game (Here, just retry level after delay)
              setTimeout(() => {
-                 // For now, let's just restart the same level on incorrect
-                 // this.level = 1; // Option: Reset to level 1
                  this.startGame(); // Regenerate the same level difficulty or next level
             }, 2000); // Longer delay for incorrect
         }
