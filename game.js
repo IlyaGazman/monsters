@@ -110,48 +110,35 @@ class CubeCounterGame {
 
     /**
      * Generate parameters for the current level.
+     * 
+     * New logic:
+     * - The cube pile at position 0,0 (pile "00") is always the tallest.
+     * - Its height is set to the maximum size for the current round: (current round × 2/3), rounded up.
+     * - The other two piles get a random size between the minimum size (current round × 1/6, rounded up)
+     *   and one less than the maximum size (if possible), to guarantee that pile "00" is the tallest.
      */
     generateLevel() {
-        // Cube count limit for current level (max number of cubes = level number)
-        const maxCubesForLevel = this.level;
-        
-        // Generate random cube distributions for three piles,
-        // but ensure the total doesn't exceed the level number
-        let totalCubes = 0;
-        let pile00Count = 0;
-        let pile01Count = 0;
-        let pile10Count = 0;
+        // Calculate maximum and minimum cube counts for a column based on the level.
+        const maxSize = Math.ceil(this.level * 2 / 3) || 1;
+        const minSize = Math.ceil(this.level / 6) || 1;
 
-        // If level is 1, we must have exactly 1 cube total
-        if (this.level === 1) {
-            // Place the single cube randomly in one of the piles
-            const randomPile = Math.floor(Math.random() * 3);
-            if (randomPile === 0) pile00Count = 1;
-            else if (randomPile === 1) pile01Count = 1;
-            else pile10Count = 1;
-            totalCubes = 1;
-        } else {
-            // For levels 2+, distribute cubes randomly but ensure total <= level number
-            // We need at least one cube
-            pile00Count = Math.ceil(Math.random() * Math.min(this.level, 3));
-            totalCubes = pile00Count;
-            
-            // Add to other piles if we haven't reached the max for the level
-            if (totalCubes < maxCubesForLevel) {
-                pile01Count = Math.floor(Math.random() * (maxCubesForLevel - totalCubes + 1));
-                totalCubes += pile01Count;
-            }
-            
-            if (totalCubes < maxCubesForLevel) {
-                pile10Count = Math.min(maxCubesForLevel - totalCubes, Math.floor(Math.random() * 3) + 1);
-                totalCubes += pile10Count;
-            }
-        }
+        // Helper function to get a random integer between min and max (inclusive)
+        const getRandomInt = (min, max) => {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
+
+        // Pile at "00" (top left) is assigned the maximum size.
+        const pile00Count = maxSize;
+
+        // For the other two piles, if possible, choose a random number less than the maximum
+        const upperBound = (maxSize > minSize) ? maxSize - 1 : minSize;
+        const pile01Count = getRandomInt(minSize, upperBound);
+        const pile10Count = getRandomInt(minSize, upperBound);
 
         this.correctAnswer = pile00Count + pile01Count + pile10Count;
         this.pileCounts = { '00': pile00Count, '01': pile01Count, '10': pile10Count };
 
-        // Generate answer options: one correct, three incorrect, sequential positive numbers
+        // Generate answer options: one correct, three sequential incorrect options.
         this.options = this.generateOptions(this.correctAnswer);
     }
 
@@ -263,7 +250,7 @@ class CubeCounterGame {
             return pileCubes;
         };
 
-        // Create all the cubes for animation
+        // Create all the cubes for animation. Note how pile "00" is at (0,0), ensuring it is top left.
         this.animatingCubes = true;
         this.cubesToAnimate = [
             ...createPile(this.pileCounts['00'], materials[0], 0, 0),                    // Pile 0,0 at origin
