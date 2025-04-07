@@ -146,4 +146,21 @@ function handleTouchEnd(e) {
 // --- Keyboard Handlers ---
 
 function handleKeyDown(e) {
-    if (GameLogic.getGameState() !==
+    if (GameLogic.getGameState() !== CONSTANTS.GAME_STATE.PLAYING) return;
+    
+    // If left/right arrow keys, let camera controls handle them
+    // Other keys (like drop or move horizontally) would be handled here.
+    // (Implementation not shown in this snippet)
+}
+
+function handleKeyUp(e) {
+    // Implementation details for key up events if required.
+}
+
+function handleShapeSelectionClick(e) {
+    // Implementation for shape selection click event.
+}
+
+function handleRestartClick(e) {
+    // Implementation for restart click event.
+}

@@ -1,9 +1,10 @@
-// Ensure THREE is available globally via the included script tag
-const THREE = window.THREE;
-
 /**
  * Game Initialization and State Management
  */
+ 
+// Ensure THREE is available globally via the included script tag
+const THREE = window.THREE;
+
 class CubeCounterGame {
     constructor(containerId = 'game-container') {
         this.container = document.getElementById(containerId);
@@ -20,7 +21,7 @@ class CubeCounterGame {
         this.animatingCubes = false; // Flag for cube drop animation
 
         // Camera rotation state
-        this.cameraRotationAngle = -45; // Initial angle in degrees (-45 degrees)
+        this.cameraRotationAngle = 90; // Default rotation set to 90°
         this.angleDisplay = document.getElementById('angle-display');
         this.updateAngleDisplay();
 
@@ -334,7 +335,7 @@ class CubeCounterGame {
             return pileCubes;
         };
 
-        // Create all the cubes for animation. Note how pile "00" is at (0,0), ensuring it is top left.
+        // Create all the cubes for animation.
         this.animatingCubes = true;
         this.cubesToAnimate = [
             ...createPile(this.pileCounts['00'], materials[0], 0, 0),                    // Pile 0,0 at origin
@@ -349,8 +350,9 @@ class CubeCounterGame {
         const angleRadians = (this.cameraRotationAngle * Math.PI) / 180;
         this.cubeGroup.rotation.y = angleRadians;
 
-        // Center the group slightly to improve camera view
-        this.cubeGroup.position.set(-pileSpacing / 2, 0, pileSpacing / 2);
+        // Center the group slightly to improve camera view and shift the cubes down.
+        // The Y-offset here approximates moving the cubes 100 dp from the bottom.
+        this.cubeGroup.position.set(-pileSpacing / 2, -1, pileSpacing / 2);
     }
 
     /**
