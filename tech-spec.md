@@ -1,4 +1,4 @@
-Your task is to create a JavaScript game based on the user's specifications. The game must adhere to the following technical requirements:
+            Your task is to create a JavaScript game based on the user's specifications. The game must adhere to the following technical requirements:
 
 1. MOBILE-FIRST DESIGN
    - Implement responsive design with mobile as the primary target

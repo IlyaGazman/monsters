@@ -1,4 +1,4 @@
-# Settings
+            # Settings
  - parser: chat-bulify
 
 # User
@@ -25,26 +25,3 @@ You are agent number 3. I am sharing with you the user prompt, agent 2 thoughts 
 Please respond in the fallowing format:
 
 ### path/to/file1
-```
-file1 content
-```
-
----
-
-### path/to/file2
-```
-file2 content
-```
-
-Short Summary
-add here a few sentences of summery to what you did
-
-Make sure to provide full file content and use full file paths.
-
-User Prompt:
-⟪prompt⟫
-
-⟪files_for_context = exists
-Files for context
-⟪files_for_context⟫
-⟫

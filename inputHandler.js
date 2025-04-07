@@ -1,4 +1,4 @@
-/**
+            /**
  * inputHandler.js
  * Manages user input from touch, keyboard, and mouse.
  */

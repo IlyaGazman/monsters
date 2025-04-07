@@ -1,4 +1,4 @@
-# Settings
+            # Settings
  - parser: chat-bulify
 
 # User
@@ -19,26 +19,3 @@ So our task is to handle the latest request, I am sharing with you all the proje
 Please respond in the fallowing format:
 
 ### path/to/file1
-```
-file1 content
-```
-
----
-
-### path/to/file2
-```
-file2 content
-```
-
-Short Summary
-add here a few sentences of summery to what you did
-
-Make sure to provide full file content and use full file paths.
-
-User Prompt:
-⟪prompt⟫
-
-⟪files_for_context = exists
-Project Files:
-⟪files_for_context⟫
-⟫
