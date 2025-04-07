@@ -1,0 +1,21 @@
+Applies to:
+index.html, dependencies.txt, None
+
+Rule:
+Using Dependencies
+ - Declare all external JavaScript dependencies in `dependencies.txt`.
+ - Do not add dependencies in `index.html`, use only `dependencies.txt`.
+ - `dependencies.txt` Format: One dependency per line.
+   - CDN (Recommended):
+     - `https://unpkg.com/vue@3`
+     - Use full URLs.
+   - npm (Alternative):
+     - `lodash@^4.17.0`
+     - `react@latest`
+     - Requires package name and version (`specific`, `^range`, `~range`, `latest`).
+     - ES Module Loading:
+       - Prefix line with `module` keyword (e.g., `module https://unpkg.com/vue@3`).
+       - Loads the script using `type="importmap"` / ES module imports.
+       - If no `module` prefix: Loads via standard `<script>` tag.
+     - Comments: Lines starting with `#` are ignored.
+     - Blank lines: Ignored.

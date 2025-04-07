@@ -1,3 +1,4 @@
-schemas
+bulifier/*
+bulifier
 dependencies.txt
 *.gitignore

@@ -2,21 +2,10 @@
  - parser: code
 
 # User
+System Rules
+⟪rules⟫
+
 I am working on the ⟪project_name⟫ project.
-
-Project Structure
-assets/
- - fonts/
- - images/
-css/
- - styles.css
-js/
- - main.js
-index.html // must have <!-- Vendor libraries --> under the <body> tag
-dependencies.txt // simplified package.json for dependencies only
-
----
-
 Your task is to update/create files based on my request at the end(you can output one or multiple files) and use the following format:
 
 ### path/to/file1

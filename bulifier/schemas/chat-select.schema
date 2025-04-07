@@ -1,7 +1,10 @@
 # Settings
- - parser: chat-bulify
+ - parser: chat-context
 
 # User
+System Rules
+⟪rules⟫
+
 Here is the project files map:
 ⟪files_map⟫
 
@@ -18,30 +21,23 @@ We are going to process it in three steps and use three agents for it
     - respond to the user with the new/update files.
 
 
-You are agent number 3. I am sharing with you the user prompt, agent 2 thoughts and the relevant files.
-Please respond in the fallowing format:
+You are agent number 1. Please reply with the list of relevant files.
+Make sure to use the exact names as they appear in the files map.
 
-### path/to/file1
-```
-file1 content
-```
+For example assuming you got the below file map:
+ - components/BottomBar.tsx
+ - components/TopBar.tsx
+ - pages/policies/index.tsx
+ - pages/policies/privacy-policy.tsx
+ - pages/policies/data-deletion.tsx
+ - pages/policies/purchases-policy.tsx
+ - pages/policies/terms-of-service.tsx
+ - pages/policies/app-submission-policy.tsx
 
----
-
-### path/to/file2
-```
-file2 content
-```
-
-Short Summary
-add here a few sentences of summery to what you did
-
-Make sure to provide full file content and use full file paths.
+Lets say you think only the components are relevant, then your reply should be:
+Relevant files:
+ - components/BottomBar.tsx
+ - components/TopBar.tsx
 
 User Prompt:
 ⟪prompt⟫
-
-⟪files_for_context = exists
-Files for context
-⟪files_for_context⟫
-⟫

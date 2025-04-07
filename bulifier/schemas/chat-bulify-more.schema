@@ -2,7 +2,10 @@
  - parser: chat-bulify
 
 # User
-Here is the project files map:
+System Rules
+⟪rules⟫
+
+ is the project files map:
 ⟪files_map⟫
 
 The user sent us a prompt and we need to generate or update some of the project files in a response.

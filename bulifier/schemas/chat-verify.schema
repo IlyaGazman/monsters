@@ -2,6 +2,9 @@
  - parser: chat-context
 
 # User
+System Rules
+⟪rules⟫
+
 Here is the project files map:
 ⟪files_map⟫
 
