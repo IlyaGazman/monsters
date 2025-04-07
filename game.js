@@ -170,11 +170,11 @@ class CubeCounterGame {
     /**
      * Generate parameters for the current level.
      * 
-     * New Logic:
-     * - The correct answer is always equal to the current level.
-     * - The cubes are divided into three piles whose total sum equals the level.
-     * - For column 0,0: choose a random integer between ceil(level/6) and floor(level*2/3).
-     * - For column 0,1: choose a random integer between ceil(level/6) and (floor(level*2/3) - p00).
+     * Modified Logic:
+     * - The correct answer is a random integer between 1/3 * current level and the current level.
+     * - The cubes are divided into three piles whose total sum equals the correct answer.
+     * - For column 0,0: choose a random integer between ceil(correctAnswer/6) and floor(correctAnswer*2/3).
+     * - For column 0,1: choose a random integer between ceil(correctAnswer/6) and (floor(correctAnswer*2/3) - p00).
      * - For column 1,0: assign the remaining cubes.
      * 
      * If the level is too small to allow this distribution (i.e., when constraints conflict),
@@ -182,24 +182,27 @@ class CubeCounterGame {
      */
     generateLevel() {
         const L = this.level;
+        
+        // Generate a random number between 1/3 of level and the current level
+        const minCubes = Math.max(1, Math.ceil(L / 3));
+        this.correctAnswer = Math.floor(Math.random() * (L - minCubes + 1)) + minCubes;
+        
         // For levels too small for a balanced random split
-        if (L < 6) {
-            this.pileCounts = { '00': L, '01': 0, '10': 0 };
-            this.correctAnswer = L;
+        if (this.correctAnswer < 6) {
+            this.pileCounts = { '00': this.correctAnswer, '01': 0, '10': 0 };
             this.options = this.generateOptions(this.correctAnswer);
             return;
         }
         
-        const min = Math.ceil(L / 6);
-        const max = Math.floor(L * 2 / 3);
+        const min = Math.ceil(this.correctAnswer / 6);
+        const max = Math.floor(this.correctAnswer * 2 / 3);
         let p00, p01, p10;
         
         // Ensure p00 is chosen so that there is room for p01:
         const maxForP00 = max - min; 
         if (min > maxForP00) {
             // Fallback when range is too narrow.
-            this.pileCounts = { '00': L, '01': 0, '10': 0 };
-            this.correctAnswer = L;
+            this.pileCounts = { '00': this.correctAnswer, '01': 0, '10': 0 };
             this.options = this.generateOptions(this.correctAnswer);
             return;
         }
@@ -210,8 +213,7 @@ class CubeCounterGame {
         const upperForP01 = max - p00;
         if (upperForP01 < min) {
             // If not possible, fallback to all cubes in pile "00"
-            this.pileCounts = { '00': L, '01': 0, '10': 0 };
-            this.correctAnswer = L;
+            this.pileCounts = { '00': this.correctAnswer, '01': 0, '10': 0 };
             this.options = this.generateOptions(this.correctAnswer);
             return;
         }
@@ -219,11 +221,9 @@ class CubeCounterGame {
         p01 = Math.floor(Math.random() * (upperForP01 - min + 1)) + min;
         
         // Remaining cubes go to pile 1,0 (can be zero or more)
-        p10 = L - (p00 + p01);
+        p10 = this.correctAnswer - (p00 + p01);
         
         this.pileCounts = { '00': p00, '01': p01, '10': p10 };
-        // The correct answer is always the current level.
-        this.correctAnswer = L;
         this.options = this.generateOptions(this.correctAnswer);
     }
 
