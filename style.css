@@ -74,6 +74,45 @@ html, body {
     background-color: #ddd;
 }
 
+/* Camera controls */
+#camera-controls {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    display: flex;
+    gap: 20px;
+}
+
+#camera-controls button {
+    width: 50px;
+    height: 50px;
+    font-size: 24px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 2px solid #555;
+    border-radius: 50%;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+#camera-controls button:active {
+    background-color: rgba(200, 200, 200, 0.8);
+    transform: scale(0.95);
+}
+
+#angle-display {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    background-color: rgba(255, 255, 255, 0.8);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
 /* Media query for larger screens (e.g., tablets/desktops) */
 @media (min-width: 600px) {
     #level-display, #message-display {

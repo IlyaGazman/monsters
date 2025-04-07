@@ -1,4 +1,4 @@
- // Ensure THREE is available globally via the included script tag
+// Ensure THREE is available globally via the included script tag
 const THREE = window.THREE;
 
 /**
@@ -18,6 +18,11 @@ class CubeCounterGame {
         this.options = [];
         this.isProcessingAnswer = false; // Prevent multiple clicks during feedback
         this.animatingCubes = false; // Flag for cube drop animation
+
+        // Camera rotation state
+        this.cameraRotationAngle = -45; // Initial angle in degrees (-45 degrees)
+        this.angleDisplay = document.getElementById('angle-display');
+        this.updateAngleDisplay();
 
         // Basic device check (presence of touch events)
         this.isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -86,6 +91,59 @@ class CubeCounterGame {
                 this.checkAnswer(this.options[choiceIndex], button);
             });
         });
+
+        // Camera rotation controls
+        const rotateLeftBtn = document.getElementById('rotate-left');
+        const rotateRightBtn = document.getElementById('rotate-right');
+
+        rotateLeftBtn.addEventListener('click', () => this.rotateCamera(-15));
+        rotateRightBtn.addEventListener('click', () => this.rotateCamera(15));
+
+        // Add touch events
+        if (this.isTouchDevice) {
+            rotateLeftBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.rotateCamera(-15);
+            });
+            rotateRightBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                this.rotateCamera(15);
+            });
+        }
+
+        // Add keyboard controls for camera rotation
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                this.rotateCamera(-15);
+            } else if (e.key === 'ArrowRight') {
+                this.rotateCamera(15);
+            }
+        });
+    }
+
+    /**
+     * Rotate the camera by the specified angle in degrees.
+     * @param {number} angleDelta - The angle to rotate in degrees.
+     */
+    rotateCamera(angleDelta) {
+        // Update the rotation angle
+        this.cameraRotationAngle = (this.cameraRotationAngle + angleDelta) % 360;
+        
+        // Convert to radians for THREE.js
+        const angleRadians = (this.cameraRotationAngle * Math.PI) / 180;
+        
+        // Update cube group rotation
+        this.cubeGroup.rotation.y = angleRadians;
+        
+        // Update the angle display
+        this.updateAngleDisplay();
+    }
+
+    /**
+     * Update the angle display with the current rotation angle.
+     */
+    updateAngleDisplay() {
+        this.angleDisplay.textContent = `Rotation: ${this.cameraRotationAngle}°`;
     }
 
     /**
@@ -287,8 +345,9 @@ class CubeCounterGame {
         // Start animation timers
         this.animationStartTime = performance.now();
 
-        // Rotate the entire group by -45 degrees (PI/4 radians) around the Y axis
-        this.cubeGroup.rotation.y = -Math.PI / 4;
+        // Apply the current rotation angle to the cube group
+        const angleRadians = (this.cameraRotationAngle * Math.PI) / 180;
+        this.cubeGroup.rotation.y = angleRadians;
 
         // Center the group slightly to improve camera view
         this.cubeGroup.position.set(-pileSpacing / 2, 0, pileSpacing / 2);
