@@ -38,10 +38,15 @@ html, body {
     background-color: rgba(240, 240, 240, 0.8); /* Semi-transparent background */
 }
 
-#level-display, #message-display {
+#level-display, #message-display, #timer-display, #score-display, #high-score-display {
     margin-bottom: 10px;
     font-size: 1.2em;
     font-weight: bold;
+}
+
+#timer-display {
+    color: #333;
+    transition: color 0.3s ease;
 }
 
 #options-container {
@@ -115,7 +120,7 @@ html, body {
 
 /* Media query for larger screens (e.g., tablets/desktops) */
 @media (min-width: 600px) {
-    #level-display, #message-display {
+    #level-display, #message-display, #timer-display, #score-display, #high-score-display {
         font-size: 1.5em;
     }
 

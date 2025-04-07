@@ -19,6 +19,10 @@ class CubeCounterGame {
         this.options = [];
         this.isProcessingAnswer = false; // Prevent multiple clicks during feedback
         this.animatingCubes = false; // Flag for cube drop animation
+        this.timer = 100; // Starting timer value
+        this.timerInterval = null;
+        this.score = 0;
+        this.highScore = this.getCookie('highScore') || 0;
 
         // Camera rotation state
         this.cameraRotationAngle = 90; // Default rotation set to 90°
@@ -32,6 +36,9 @@ class CubeCounterGame {
         this.levelDisplay = document.getElementById('level-display');
         this.messageDisplay = document.getElementById('message-display');
         this.optionButtons = document.querySelectorAll('.option-button');
+        this.timerDisplay = document.getElementById('timer-display');
+        this.scoreDisplay = document.getElementById('score-display');
+        this.highScoreDisplay = document.getElementById('high-score-display');
 
         this.initThree();
         this.initUI();
@@ -120,6 +127,108 @@ class CubeCounterGame {
                 this.rotateCamera(15);
             }
         });
+
+        // Display initial high score
+        this.highScoreDisplay.textContent = `High Score: ${this.highScore}`;
+    }
+
+    /**
+     * Set cookie for persistent storage
+     */
+    setCookie(name, value, days = 365) {
+        const d = new Date();
+        d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
+        const expires = `expires=${d.toUTCString()}`;
+        document.cookie = `${name}=${value};${expires};path=/`;
+    }
+
+    /**
+     * Get cookie value by name
+     */
+    getCookie(name) {
+        const cookieName = `${name}=`;
+        const decodedCookie = decodeURIComponent(document.cookie);
+        const cookies = decodedCookie.split(';');
+        
+        for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            if (cookie.indexOf(cookieName) === 0) {
+                return cookie.substring(cookieName.length, cookie.length);
+            }
+        }
+        return "";
+    }
+
+    /**
+     * Start the timer for the current question
+     */
+    startTimer() {
+        this.timer = 100;
+        this.updateTimerDisplay();
+        
+        // Clear any existing timer
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+        }
+        
+        // Set new timer that counts down every 100ms
+        this.timerInterval = setInterval(() => {
+            this.timer--;
+            this.updateTimerDisplay();
+            
+            if (this.timer <= 0) {
+                this.handleTimeUp();
+            }
+        }, 100); // 100ms interval for countdown from 100 to 0 in 10 seconds
+    }
+
+    /**
+     * Update the timer display
+     */
+    updateTimerDisplay() {
+        this.timerDisplay.textContent = `Time: ${this.timer}`;
+        
+        // Visual feedback - change color when time is running low
+        if (this.timer <= 20) {
+            this.timerDisplay.style.color = 'red';
+        } else if (this.timer <= 50) {
+            this.timerDisplay.style.color = 'orange';
+        } else {
+            this.timerDisplay.style.color = '';
+        }
+    }
+
+    /**
+     * Handle when time is up
+     */
+    handleTimeUp() {
+        clearInterval(this.timerInterval);
+        this.isProcessingAnswer = true;
+        this.messageDisplay.textContent = `Time's up! The answer was ${this.correctAnswer}.`;
+        
+        // Highlight the correct answer
+        this.optionButtons.forEach((btn, index) => {
+            btn.disabled = true;
+            if (this.options[index] === this.correctAnswer) {
+                btn.style.backgroundColor = 'lightgreen';
+            }
+        });
+        
+        // Reset game after delay
+        setTimeout(() => {
+            // Update high score if needed before resetting
+            if (this.score > this.highScore) {
+                this.highScore = this.score;
+                this.setCookie('highScore', this.highScore);
+                this.highScoreDisplay.textContent = `High Score: ${this.highScore}`;
+            }
+            
+            // Reset the score and start a new game
+            this.score = 0;
+            this.scoreDisplay.textContent = `Score: ${this.score}`;
+            this.level = 1;
+            this.startGame();
+        }, 2000);
     }
 
     /**
@@ -165,6 +274,7 @@ class CubeCounterGame {
 
         this.renderCubes();
         this.updateUI();
+        this.startTimer(); // Start the timer for the question
     }
 
     /**
@@ -361,6 +471,8 @@ class CubeCounterGame {
     updateUI() {
         this.levelDisplay.textContent = `Level: ${this.level}`;
         this.messageDisplay.textContent = "How many cubes in total?";
+        this.scoreDisplay.textContent = `Score: ${this.score}`;
+        this.highScoreDisplay.textContent = `High Score: ${this.highScore}`;
         this.optionButtons.forEach((button, index) => {
             button.textContent = this.options[index];
             button.style.backgroundColor = ''; // Reset background color
@@ -376,11 +488,29 @@ class CubeCounterGame {
     checkAnswer(selectedAnswer, buttonElement) {
         this.isProcessingAnswer = true; // Prevent further input
         this.optionButtons.forEach(btn => btn.disabled = true); // Disable all buttons temporarily
+        
+        // Stop the timer
+        clearInterval(this.timerInterval);
 
         if (selectedAnswer === this.correctAnswer) {
-            this.messageDisplay.textContent = "Correct!";
+            // Calculate the score - remaining time becomes points
+            const roundScore = this.timer;
+            this.score += roundScore;
+            
+            this.messageDisplay.textContent = `Correct! +${roundScore} points`;
             buttonElement.style.backgroundColor = 'lightgreen'; // Visual feedback: Correct
             this.level++;
+            
+            // Update the score display
+            this.scoreDisplay.textContent = `Score: ${this.score}`;
+            
+            // Update high score if needed
+            if (this.score > this.highScore) {
+                this.highScore = this.score;
+                this.setCookie('highScore', this.highScore);
+                this.highScoreDisplay.textContent = `High Score: ${this.highScore}`;
+            }
+            
             // Proceed to next level after a short delay
             setTimeout(() => {
                  this.startGame(); // Setup next level
@@ -389,16 +519,27 @@ class CubeCounterGame {
             this.messageDisplay.textContent = `Incorrect! The answer was ${this.correctAnswer}.`;
             buttonElement.style.backgroundColor = 'salmon'; // Visual feedback: Incorrect
 
-             // Highlight the correct button
+            // Highlight the correct button
             this.optionButtons.forEach((btn, index) => {
                 if (this.options[index] === this.correctAnswer) {
-                     btn.style.backgroundColor = 'lightgreen';
+                    btn.style.backgroundColor = 'lightgreen';
                 }
             });
 
-            // Reset to same level or end game (Here, just retry level after delay)
-             setTimeout(() => {
-                 this.startGame(); // Regenerate the same level difficulty or next level
+            // Reset the game after delay
+            setTimeout(() => {
+                // Update high score if needed before resetting
+                if (this.score > this.highScore) {
+                    this.highScore = this.score;
+                    this.setCookie('highScore', this.highScore);
+                    this.highScoreDisplay.textContent = `High Score: ${this.highScore}`;
+                }
+                
+                // Reset the score and start a new game
+                this.score = 0;
+                this.scoreDisplay.textContent = `Score: ${this.score}`;
+                this.level = 1;
+                this.startGame();
             }, 2000); // Longer delay for incorrect
         }
     }
