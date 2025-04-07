@@ -191,60 +191,9 @@ html, body {
     cursor: not-allowed;
 }
 
-/* Camera controls */
-#camera-controls {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3;
-    display: flex;
-    gap: 25px; /* Increased gap */
-    visibility: hidden; /* Hidden until game starts */
-    background-color: rgba(255, 255, 255, 0.6); /* Control background */
-    padding: 8px 15px;
-    border-radius: 30px; /* Pill shape */
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-}
-
-#camera-controls.visible {
-    visibility: visible;
-}
-
-
-#camera-controls button {
-    width: 55px; /* Slightly larger */
-    height: 55px;
-    font-size: 28px; /* Larger arrow */
-    font-weight: bold;
-    color: #34495e;
-    background-color: rgba(255, 255, 255, 0.8); /* Clearer background */
-    border: 1px solid rgba(0, 0, 0, 0.1); /* Subtle border */
-    border-radius: 50%;
-    cursor: pointer;
-    touch-action: manipulation;
-    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    display: flex; /* Center arrow */
-    justify-content: center; /* Center arrow */
-    align-items: center; /* Center arrow */
-    line-height: 1; /* Ensure consistent vertical align */
-}
-
-#camera-controls button:hover {
-    background-color: rgba(245, 245, 245, 0.9);
-     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-}
-
-#camera-controls button:active {
-    background-color: rgba(230, 230, 230, 0.9);
-    transform: scale(0.95);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-}
-
 #angle-display {
     position: fixed;
-    bottom: 95px; /* Position above controls */
+    bottom: 20px; /* Positioned at the bottom */
     left: 50%;
     transform: translateX(-50%);
     z-index: 3;
@@ -333,20 +282,7 @@ html, body {
         border-radius: 10px;
     }
 
-     #camera-controls {
-        bottom: 30px; /* More space from bottom */
-        gap: 30px;
-        padding: 10px 20px;
-     }
-
-     #camera-controls button {
-        width: 65px;
-        height: 65px;
-        font-size: 32px;
-     }
-
      #angle-display {
-        bottom: 115px; /* Position above larger controls */
         padding: 8px 15px;
         font-size: 1em;
      }

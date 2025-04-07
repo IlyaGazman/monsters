@@ -1,4 +1,4 @@
-            /**
+/**
  * Game Initialization and State Management
  */
 
@@ -40,7 +40,6 @@ class CubeCounterGame {
 
         // UI Elements
         this.uiContainer = document.getElementById('ui-container');
-        this.cameraControls = document.getElementById('camera-controls');
         this.startScreen = document.getElementById('start-screen');
         this.gameOverScreen = document.getElementById('game-over-screen');
         this.playButton = document.getElementById('play-button');
@@ -117,16 +116,6 @@ class CubeCounterGame {
             });
         });
 
-        // Camera Rotation Button Listeners
-        const rotateLeftBtn = document.getElementById('rotate-left');
-        const rotateRightBtn = document.getElementById('rotate-right');
-        rotateLeftBtn.addEventListener('click', () => this.rotateCamera(-15));
-        rotateRightBtn.addEventListener('click', () => this.rotateCamera(15));
-        if (this.isTouchDevice) {
-            rotateLeftBtn.addEventListener('touchstart', (e) => { e.preventDefault(); this.rotateCamera(-15); });
-            rotateRightBtn.addEventListener('touchstart', (e) => { e.preventDefault(); this.rotateCamera(15); });
-        }
-
         // Keyboard Rotation Listener
         window.addEventListener('keydown', (e) => {
             if (this.gameState !== GameState.PLAYING) return;
@@ -148,7 +137,6 @@ class CubeCounterGame {
         this.startScreen.classList.add('visible');
         this.gameOverScreen.classList.remove('visible');
         this.uiContainer.classList.remove('visible');
-        this.cameraControls.classList.remove('visible');
         this.angleDisplay.classList.remove('visible');
         this.clearCubes(); // Clear any leftover cubes
     }
@@ -171,7 +159,6 @@ class CubeCounterGame {
         this.gameOverScreen.classList.add('visible');
         this.startScreen.classList.remove('visible');
         this.uiContainer.classList.remove('visible');
-        this.cameraControls.classList.remove('visible');
         this.angleDisplay.classList.remove('visible');
     }
 
@@ -182,7 +169,6 @@ class CubeCounterGame {
         this.startScreen.classList.remove('visible');
         this.gameOverScreen.classList.remove('visible');
         this.uiContainer.classList.add('visible');
-        this.cameraControls.classList.add('visible');
         this.angleDisplay.classList.add('visible');
     }
 
@@ -440,7 +426,9 @@ class CubeCounterGame {
 
         const angleRadians = (this.cameraRotationAngle * Math.PI) / 180;
         this.cubeGroup.rotation.y = angleRadians;
-        this.cubeGroup.position.set(-pileSpacing / 2, -1, pileSpacing / 2);
+        
+        // Move the cubes to the bottom of the screen
+        this.cubeGroup.position.set(-pileSpacing / 2, -2.5, pileSpacing / 2);
     }
 
     /**
