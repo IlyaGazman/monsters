@@ -9,6 +9,22 @@
     <!-- Add other relevant meta tags as needed -->
 </head>
 <body>
+    <!-- Start Screen Overlay -->
+    <div id="start-screen" class="overlay visible">
+        <h1>Cube Counter</h1>
+        <div id="start-high-score">High Score: 0</div>
+        <button id="play-button">Play</button>
+    </div>
+
+    <!-- Game Over Screen Overlay -->
+    <div id="game-over-screen" class="overlay">
+        <h1>Game Over</h1>
+        <div id="final-score">Your Score: 0</div>
+        <div id="game-over-high-score">High Score: 0</div>
+        <button id="restart-button">Play Again</button>
+    </div>
+
+    <!-- Main Game UI -->
     <div id="ui-container">
         <div id="level-display">Level: 1</div>
         <div id="message-display">Count the cubes!</div>
@@ -20,7 +36,7 @@
         </div>
         <div id="timer-display">Time: 100</div>
         <div id="score-display">Score: 0</div>
-        <div id="high-score-display">High Score: 0</div>
+        <!-- High score removed from main UI -->
     </div>
     <div id="angle-display">Rotation: 0°</div>
     <div id="camera-controls">

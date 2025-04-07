@@ -25,6 +25,57 @@ html, body {
     z-index: 1;
 }
 
+/* Overlays (Start & Game Over) */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    visibility: hidden; /* Hidden by default */
+    opacity: 0;
+    transition: visibility 0s 0.5s, opacity 0.5s linear;
+}
+
+.overlay.visible {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.5s linear;
+}
+
+.overlay h1 {
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
+
+.overlay div {
+    font-size: 1.5em;
+    margin-bottom: 30px;
+}
+
+.overlay button {
+    padding: 15px 30px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.overlay button:hover {
+    background-color: #45a049;
+}
+
 #ui-container {
     position: fixed;
     top: 0;
@@ -36,9 +87,14 @@ html, body {
     align-items: center;
     padding: 10px;
     background-color: rgba(240, 240, 240, 0.8); /* Semi-transparent background */
+    visibility: hidden; /* Hidden until game starts */
 }
 
-#level-display, #message-display, #timer-display, #score-display, #high-score-display {
+#ui-container.visible {
+    visibility: visible;
+}
+
+#level-display, #message-display, #timer-display, #score-display {
     margin-bottom: 10px;
     font-size: 1.2em;
     font-weight: bold;
@@ -88,7 +144,13 @@ html, body {
     z-index: 3;
     display: flex;
     gap: 20px;
+    visibility: hidden; /* Hidden until game starts */
 }
+
+#camera-controls.visible {
+    visibility: visible;
+}
+
 
 #camera-controls button {
     width: 50px;
@@ -116,11 +178,16 @@ html, body {
     padding: 5px 10px;
     border-radius: 5px;
     font-weight: bold;
+    visibility: hidden; /* Hidden until game starts */
+}
+
+#angle-display.visible {
+    visibility: visible;
 }
 
 /* Media query for larger screens (e.g., tablets/desktops) */
 @media (min-width: 600px) {
-    #level-display, #message-display, #timer-display, #score-display, #high-score-display {
+    #level-display, #message-display, #timer-display, #score-display {
         font-size: 1.5em;
     }
 
@@ -133,4 +200,17 @@ html, body {
      #ui-container {
         padding: 20px;
      }
+
+    .overlay h1 {
+        font-size: 3.5em;
+    }
+
+    .overlay div {
+        font-size: 2em;
+    }
+
+    .overlay button {
+        padding: 20px 40px;
+        font-size: 1.5em;
+    }
 }
