@@ -113,17 +113,17 @@ class CubeCounterGame {
      * 
      * New Logic:
      * - The correct answer is always equal to the current level.
-     * - The cubes displayed are divided into three piles whose sum equals the level.
-     * - Pile "00" (top left) is always the tallest.
-     * - For very small levels where a balanced distribution isn’t possible (level < 6),
-     *   all cubes are placed in pile "00".
-     * - For level >= 6, we attempt to distribute cubes such that each pile’s count is between
-     *   a minimum of ceil(level/6) and a maximum of floor((level*2)/3), with pile "00" strictly greater
-     *   than the other two.
+     * - The cubes are divided into three piles whose total sum equals the level.
+     * - For column 0,0: choose a random integer between ceil(level/6) and floor(level*2/3).
+     * - For column 0,1: choose a random integer between ceil(level/6) and (floor(level*2/3) - p00).
+     * - For column 1,0: assign the remaining cubes.
+     * 
+     * If the level is too small to allow this distribution (i.e., when constraints conflict),
+     * all cubes are assigned to column 0,0.
      */
     generateLevel() {
         const L = this.level;
-        // For very small levels, simply assign all cubes to pile "00"
+        // For levels too small for a balanced random split
         if (L < 6) {
             this.pileCounts = { '00': L, '01': 0, '10': 0 };
             this.correctAnswer = L;
@@ -132,32 +132,37 @@ class CubeCounterGame {
         }
         
         const min = Math.ceil(L / 6);
-        const max = Math.floor((L * 2) / 3);
-        let distributionFound = false;
+        const max = Math.floor(L * 2 / 3);
         let p00, p01, p10;
         
-        // Try possible values for p00 starting from max down to min+1 (to ensure p00 > others)
-        for (p00 = max; p00 >= min + 1; p00--) {
-            let remaining = L - p00;
-            // Try possible pairs for p01 and p10
-            for (let first = min; first < p00; first++) {
-                let second = remaining - first;
-                if (second >= min && second < p00) {
-                    // Ensure a valid distribution is found
-                    p01 = first;
-                    p10 = second;
-                    distributionFound = true;
-                    break;
-                }
-            }
-            if (distributionFound) break;
-        }
-        // If a valid distribution isn’t found, fallback to all cubes in pile "00"
-        if (!distributionFound) {
+        // Ensure p00 is chosen so that there is room for p01:
+        const maxForP00 = max - min; 
+        if (min > maxForP00) {
+            // Fallback when range is too narrow.
             this.pileCounts = { '00': L, '01': 0, '10': 0 };
-        } else {
-            this.pileCounts = { '00': p00, '01': p01, '10': p10 };
+            this.correctAnswer = L;
+            this.options = this.generateOptions(this.correctAnswer);
+            return;
         }
+        // Randomly choose p00 between min and maxForP00 (inclusive)
+        p00 = Math.floor(Math.random() * (maxForP00 - min + 1)) + min;
+        
+        // Upper bound for p01 is (max - p00); ensure that is at least min.
+        const upperForP01 = max - p00;
+        if (upperForP01 < min) {
+            // If not possible, fallback to all cubes in pile "00"
+            this.pileCounts = { '00': L, '01': 0, '10': 0 };
+            this.correctAnswer = L;
+            this.options = this.generateOptions(this.correctAnswer);
+            return;
+        }
+        // Randomly choose p01 between min and upperForP01 (inclusive)
+        p01 = Math.floor(Math.random() * (upperForP01 - min + 1)) + min;
+        
+        // Remaining cubes go to pile 1,0 (can be zero or more)
+        p10 = L - (p00 + p01);
+        
+        this.pileCounts = { '00': p00, '01': p01, '10': p10 };
         // The correct answer is always the current level.
         this.correctAnswer = L;
         this.options = this.generateOptions(this.correctAnswer);
