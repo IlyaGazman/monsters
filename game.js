@@ -51,7 +51,7 @@ class CubeCounterGame {
         this.messageDisplay = document.getElementById('message-display');
         this.optionButtons = document.querySelectorAll('.option-button');
         this.timerDisplay = document.getElementById('timer-display');
-        this.scoreDisplay = document.getElementById('score-display');
+        // Removed scoreDisplay element since score should not be shown during the game
 
         this.initThree();
         this.initUI();
@@ -419,11 +419,12 @@ class CubeCounterGame {
 
     /**
      * Update UI text elements for the playing state.
+     * Note: Score is no longer shown during gameplay.
      */
     updateUI() {
         this.levelDisplay.textContent = `Level: ${this.level}`;
         this.messageDisplay.textContent = "How many cubes in total?";
-        this.scoreDisplay.textContent = `Score: ${this.score}`;
+        // Removed the score display update since score should not be visible during gameplay.
         this.optionButtons.forEach((button, index) => {
             button.textContent = this.options[index];
             button.style.backgroundColor = '';
@@ -447,7 +448,7 @@ class CubeCounterGame {
             this.messageDisplay.textContent = `Correct! +${roundScore} points`;
             buttonElement.style.backgroundColor = 'lightgreen';
             this.level++;
-            this.scoreDisplay.textContent = `Score: ${this.score}`;
+            // Removed in-game score display update
 
             setTimeout(() => {
                 if (this.gameState === GameState.PLAYING) {
