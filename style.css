@@ -1,4 +1,4 @@
-            /* Basic Reset */
+/* Basic Reset */
 * {
     margin: 0;
     padding: 0;
@@ -9,8 +9,8 @@ html, body {
     width: 100%;
     height: 100%;
     overflow: hidden; /* Prevent scrolling */
-    font-family: sans-serif;
-    background-color: #f0f0f0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Slightly more modern font */
+    background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); /* Subtle gradient background */
     color: #333;
     touch-action: manipulation; /* Prevent default touch actions like zoom */
     -webkit-tap-highlight-color: transparent; /* Remove tap highlight on mobile */
@@ -32,7 +32,9 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6); /* Slightly darker overlay */
+    backdrop-filter: blur(5px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(5px); /* Safari support */
     z-index: 10;
     display: flex;
     flex-direction: column;
@@ -42,38 +44,47 @@ html, body {
     text-align: center;
     visibility: hidden; /* Hidden by default */
     opacity: 0;
-    transition: visibility 0s 0.5s, opacity 0.5s linear;
+    transition: visibility 0s 0.5s, opacity 0.5s ease-in-out;
+    padding: 20px; /* Add padding for content */
 }
 
 .overlay.visible {
     visibility: visible;
     opacity: 1;
-    transition: opacity 0.5s linear;
+    transition: opacity 0.5s ease-in-out;
 }
 
 .overlay h1 {
-    font-size: 2.5em;
+    font-size: clamp(2.5em, 8vw, 4em); /* Responsive font size */
     margin-bottom: 20px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
 .overlay div {
-    font-size: 1.5em;
+    font-size: clamp(1.3em, 4vw, 1.8em); /* Responsive font size */
     margin-bottom: 30px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
 
 .overlay button {
-    padding: 15px 30px;
-    font-size: 1.2em;
+    padding: 15px 35px;
+    font-size: clamp(1.1em, 3.5vw, 1.5em); /* Responsive font size */
     cursor: pointer;
     border: none;
-    border-radius: 5px;
-    background-color: #4CAF50;
+    border-radius: 8px; /* Slightly more rounded */
+    background-color: #4CAF50; /* Keep green for positive action */
     color: white;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.1s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .overlay button:hover {
     background-color: #45a049;
+    transform: translateY(-2px); /* Subtle lift on hover */
+}
+.overlay button:active {
+    transform: translateY(1px); /* Press down effect */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 #ui-container {
@@ -85,54 +96,99 @@ html, body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 10px;
-    background-color: rgba(240, 240, 240, 0.8); /* Semi-transparent background */
+    padding: 15px;
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+    backdrop-filter: blur(8px); /* Frosted glass effect */
+    -webkit-backdrop-filter: blur(8px); /* Safari support */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     visibility: hidden; /* Hidden until game starts */
+    transition: background-color 0.3s;
 }
 
 #ui-container.visible {
     visibility: visible;
 }
 
+/* UI Text elements */
 #level-display, #message-display, #timer-display, #score-display {
-    margin-bottom: 10px;
-    font-size: 1.2em;
-    font-weight: bold;
+    margin-bottom: 12px;
+    font-size: clamp(1.1em, 3vw, 1.4em); /* Responsive font size */
+    font-weight: 600; /* Slightly bolder */
+    color: #2c3e50; /* Darker text color */
+    text-shadow: 0 1px 1px rgba(255,255,255,0.7);
+}
+
+#message-display {
+    font-weight: normal;
+    font-style: italic;
+    color: #34495e;
+    text-align: center; /* Center message text */
 }
 
 #timer-display {
-    color: #333;
+    color: #2980b9; /* Blue color for timer */
     transition: color 0.3s ease;
+}
+
+#score-display {
+    color: #27ae60; /* Green color for score */
 }
 
 #options-container {
     display: flex;
     flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
     justify-content: center;
-    gap: 10px; /* Spacing between buttons */
+    gap: 12px; /* Spacing between buttons */
+    margin-top: 10px;
+    width: 100%;
+    max-width: 500px; /* Limit width on larger screens */
 }
 
 .option-button {
-    padding: 10px 20px;
-    font-size: 1.1em;
+    padding: 12px 25px;
+    font-size: clamp(1.1em, 3.5vw, 1.3em); /* Responsive font size */
+    font-weight: bold;
     cursor: pointer;
-    border: 2px solid #555;
-    border-radius: 5px;
-    background-color: #fff;
-    color: #333;
-    min-width: 60px; /* Ensure buttons have a minimum size */
+    border: none; /* Remove default border */
+    border-radius: 8px; /* Rounded corners */
+    background: linear-gradient(180deg, #ffffff 0%, #f1f1f1 100%); /* Subtle gradient */
+    color: #34495e; /* Dark blue-gray text */
+    min-width: 70px; /* Ensure buttons have a minimum size */
     text-align: center;
-    transition: background-color 0.2s, transform 0.1s;
+    transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+    flex-grow: 1; /* Allow buttons to grow */
+    flex-basis: 40%; /* Roughly 2 buttons per row on small screens */
 }
 
-/* Basic button interaction feedback */
+/* Option button interaction feedback */
 .option-button:hover {
-    background-color: #eee;
+    background: linear-gradient(180deg, #f9f9f9 0%, #e9e9e9 100%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.5);
 }
 
 .option-button:active {
-    transform: scale(0.95);
-    background-color: #ddd;
+    transform: scale(0.97); /* Slightly more pronounced press */
+    background: linear-gradient(180deg, #e9e9e9 0%, #f1f1f1 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Add specific styles for feedback (can be toggled with JS classes later if needed) */
+.option-button.correct { /* Example class */
+    background: linear-gradient(180deg, #a8e6cf 0%, #87d8b5 100%) !important; /* Light green gradient */
+    color: #1a533d;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.7);
+}
+
+.option-button.incorrect { /* Example class */
+    background: linear-gradient(180deg, #ffc3a0 0%, #ffaf82 100%) !important; /* Light red/orange gradient */
+    color: #7a3b1f;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.5);
+}
+.option-button:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
 }
 
 /* Camera controls */
@@ -143,8 +199,12 @@ html, body {
     transform: translateX(-50%);
     z-index: 3;
     display: flex;
-    gap: 20px;
+    gap: 25px; /* Increased gap */
     visibility: hidden; /* Hidden until game starts */
+    background-color: rgba(255, 255, 255, 0.6); /* Control background */
+    padding: 8px 15px;
+    border-radius: 30px; /* Pill shape */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 #camera-controls.visible {
@@ -153,32 +213,49 @@ html, body {
 
 
 #camera-controls button {
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border: 2px solid #555;
+    width: 55px; /* Slightly larger */
+    height: 55px;
+    font-size: 28px; /* Larger arrow */
+    font-weight: bold;
+    color: #34495e;
+    background-color: rgba(255, 255, 255, 0.8); /* Clearer background */
+    border: 1px solid rgba(0, 0, 0, 0.1); /* Subtle border */
     border-radius: 50%;
     cursor: pointer;
     touch-action: manipulation;
+    transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex; /* Center arrow */
+    justify-content: center; /* Center arrow */
+    align-items: center; /* Center arrow */
+    line-height: 1; /* Ensure consistent vertical align */
+}
+
+#camera-controls button:hover {
+    background-color: rgba(245, 245, 245, 0.9);
+     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
 }
 
 #camera-controls button:active {
-    background-color: rgba(200, 200, 200, 0.8);
+    background-color: rgba(230, 230, 230, 0.9);
     transform: scale(0.95);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 #angle-display {
     position: fixed;
-    bottom: 80px;
+    bottom: 95px; /* Position above controls */
     left: 50%;
     transform: translateX(-50%);
     z-index: 3;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 5px 10px;
+    background-color: rgba(52, 73, 94, 0.7); /* Darker background */
+    color: white;
+    padding: 6px 12px;
     border-radius: 5px;
+    font-size: 0.9em;
     font-weight: bold;
     visibility: hidden; /* Hidden until game starts */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 #angle-display.visible {
@@ -187,22 +264,63 @@ html, body {
 
 /* Media query for larger screens (e.g., tablets/desktops) */
 @media (min-width: 600px) {
+    #ui-container {
+        padding: 15px 25px; /* Adjust padding */
+        flex-direction: row; /* Arrange items horizontally */
+        flex-wrap: wrap; /* Allow wrapping */
+        justify-content: space-between; /* Space out elements on the first row */
+        align-items: center; /* Align items vertically center */
+    }
+
     #level-display, #message-display, #timer-display, #score-display {
         font-size: 1.5em;
+        margin-bottom: 0; /* Remove bottom margin for horizontal layout */
+        text-shadow: none; /* Remove text shadow on larger screens with clearer background */
+    }
+
+    /* Define order and alignment for top row elements */
+    #level-display {
+        order: 1; /* Far left */
+        margin-right: auto; /* Push other elements to the right */
+    }
+     #timer-display {
+        order: 2; /* Center-right */
+        margin-left: 20px; /* Add space from level */
+        margin-right: 20px; /* Add space before score */
+     }
+     #score-display {
+        order: 3; /* Far right */
+     }
+
+    /* Message Display on its own row below */
+    #message-display {
+       order: 4; /* Below the top row */
+       width: 100%; /* Take full width */
+       text-align: center;
+       margin-top: 10px; /* Space from top row */
+       margin-bottom: 15px; /* Space before options */
+       font-size: 1.3em;
+    }
+
+    /* Options Container below message */
+    #options-container {
+        order: 5; /* Below message */
+        width: 100%; /* Take full width */
+        justify-content: center;
+        margin-top: 15px; /* Consistent top margin */
+        max-width: 600px; /* Slightly larger max-width for options */
     }
 
     .option-button {
-        padding: 15px 30px;
-        font-size: 1.3em;
-        min-width: 80px;
+        padding: 15px 35px;
+        font-size: 1.4em;
+        min-width: 100px;
+        flex-basis: 22%; /* Aim for 4 buttons per row */
+        flex-grow: 0; /* Prevent growing too large */
     }
 
-     #ui-container {
-        padding: 20px;
-     }
-
     .overlay h1 {
-        font-size: 3.5em;
+        font-size: 4em;
     }
 
     .overlay div {
@@ -210,7 +328,37 @@ html, body {
     }
 
     .overlay button {
-        padding: 20px 40px;
-        font-size: 1.5em;
+        padding: 20px 45px;
+        font-size: 1.6em;
+        border-radius: 10px;
+    }
+
+     #camera-controls {
+        bottom: 30px; /* More space from bottom */
+        gap: 30px;
+        padding: 10px 20px;
+     }
+
+     #camera-controls button {
+        width: 65px;
+        height: 65px;
+        font-size: 32px;
+     }
+
+     #angle-display {
+        bottom: 115px; /* Position above larger controls */
+        padding: 8px 15px;
+        font-size: 1em;
+     }
+}
+
+/* Further adjustments for very wide screens */
+@media (min-width: 1000px) {
+   #ui-container {
+        padding-left: 5%; /* Add horizontal padding */
+        padding-right: 5%;
+   }
+    #options-container {
+        max-width: 700px; /* Even wider options area */
     }
 }
