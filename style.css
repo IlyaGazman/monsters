@@ -162,27 +162,25 @@ html, body {
     flex-basis: 40%; /* Roughly 2 buttons per row on small screens */
 }
 
-/* Option button interaction feedback */
 .option-button:hover {
     background: linear-gradient(180deg, #f9f9f9 0%, #e9e9e9 100%);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15), inset 0 1px 1px rgba(255, 255, 255, 0.5);
 }
 
 .option-button:active {
-    transform: scale(0.97); /* Slightly more pronounced press */
+    transform: scale(0.97);
     background: linear-gradient(180deg, #e9e9e9 0%, #f1f1f1 100%);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), inset 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Add specific styles for feedback (can be toggled with JS classes later if needed) */
-.option-button.correct { /* Example class */
-    background: linear-gradient(180deg, #a8e6cf 0%, #87d8b5 100%) !important; /* Light green gradient */
+.option-button.correct {
+    background: linear-gradient(180deg, #a8e6cf 0%, #87d8b5 100%) !important;
     color: #1a533d;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.7);
 }
 
-.option-button.incorrect { /* Example class */
-    background: linear-gradient(180deg, #ffc3a0 0%, #ffaf82 100%) !important; /* Light red/orange gradient */
+.option-button.incorrect {
+    background: linear-gradient(180deg, #ffc3a0 0%, #ffaf82 100%) !important;
     color: #7a3b1f;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.5);
 }
@@ -191,81 +189,58 @@ html, body {
     cursor: not-allowed;
 }
 
-#angle-display {
-    position: fixed;
-    bottom: 20px; /* Positioned at the bottom */
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3;
-    background-color: rgba(52, 73, 94, 0.7); /* Darker background */
-    color: white;
-    padding: 6px 12px;
-    border-radius: 5px;
-    font-size: 0.9em;
-    font-weight: bold;
-    visibility: hidden; /* Hidden until game starts */
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-
-#angle-display.visible {
-    visibility: visible;
-}
-
-/* Media query for larger screens (e.g., tablets/desktops) */
+/* Media query for larger screens */
 @media (min-width: 600px) {
     #ui-container {
-        padding: 15px 25px; /* Adjust padding */
-        flex-direction: row; /* Arrange items horizontally */
-        flex-wrap: wrap; /* Allow wrapping */
-        justify-content: space-between; /* Space out elements on the first row */
-        align-items: center; /* Align items vertically center */
+        padding: 15px 25px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
     }
 
     #level-display, #message-display, #timer-display, #score-display {
         font-size: 1.5em;
-        margin-bottom: 0; /* Remove bottom margin for horizontal layout */
-        text-shadow: none; /* Remove text shadow on larger screens with clearer background */
+        margin-bottom: 0;
+        text-shadow: none;
     }
 
-    /* Define order and alignment for top row elements */
     #level-display {
-        order: 1; /* Far left */
-        margin-right: auto; /* Push other elements to the right */
+        order: 1;
+        margin-right: auto;
     }
      #timer-display {
-        order: 2; /* Center-right */
-        margin-left: 20px; /* Add space from level */
-        margin-right: 20px; /* Add space before score */
+        order: 2;
+        margin-left: 20px;
+        margin-right: 20px;
      }
      #score-display {
-        order: 3; /* Far right */
+        order: 3;
      }
 
-    /* Message Display on its own row below */
     #message-display {
-       order: 4; /* Below the top row */
-       width: 100%; /* Take full width */
+       order: 4;
+       width: 100%;
        text-align: center;
-       margin-top: 10px; /* Space from top row */
-       margin-bottom: 15px; /* Space before options */
+       margin-top: 10px;
+       margin-bottom: 15px;
        font-size: 1.3em;
     }
 
-    /* Options Container below message */
     #options-container {
-        order: 5; /* Below message */
-        width: 100%; /* Take full width */
+        order: 5;
+        width: 100%;
         justify-content: center;
-        margin-top: 15px; /* Consistent top margin */
-        max-width: 600px; /* Slightly larger max-width for options */
+        margin-top: 15px;
+        max-width: 600px;
     }
 
     .option-button {
         padding: 15px 35px;
         font-size: 1.4em;
         min-width: 100px;
-        flex-basis: 22%; /* Aim for 4 buttons per row */
-        flex-grow: 0; /* Prevent growing too large */
+        flex-basis: 22%;
+        flex-grow: 0;
     }
 
     .overlay h1 {
@@ -281,20 +256,15 @@ html, body {
         font-size: 1.6em;
         border-radius: 10px;
     }
-
-     #angle-display {
-        padding: 8px 15px;
-        font-size: 1em;
-     }
 }
 
 /* Further adjustments for very wide screens */
 @media (min-width: 1000px) {
    #ui-container {
-        padding-left: 5%; /* Add horizontal padding */
+        padding-left: 5%;
         padding-right: 5%;
    }
     #options-container {
-        max-width: 700px; /* Even wider options area */
+        max-width: 700px;
     }
 }

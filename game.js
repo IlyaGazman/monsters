@@ -33,7 +33,6 @@ class CubeCounterGame {
 
         // Camera rotation state
         this.cameraRotationAngle = 90; // Default rotation set to 90°
-        this.angleDisplay = document.getElementById('angle-display');
 
         // Basic device check (presence of touch events)
         this.isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
@@ -57,7 +56,6 @@ class CubeCounterGame {
         this.initThree();
         this.initUI();
         // Don't start game immediately, wait for play button
-        this.updateAngleDisplay(); // Show initial angle
         this.showStartScreen(); // Show the start screen initially
         this.animate();
     }
@@ -137,7 +135,6 @@ class CubeCounterGame {
         this.startScreen.classList.add('visible');
         this.gameOverScreen.classList.remove('visible');
         this.uiContainer.classList.remove('visible');
-        this.angleDisplay.classList.remove('visible');
         this.clearCubes(); // Clear any leftover cubes
     }
 
@@ -159,7 +156,6 @@ class CubeCounterGame {
         this.gameOverScreen.classList.add('visible');
         this.startScreen.classList.remove('visible');
         this.uiContainer.classList.remove('visible');
-        this.angleDisplay.classList.remove('visible');
     }
 
     /**
@@ -169,7 +165,6 @@ class CubeCounterGame {
         this.startScreen.classList.remove('visible');
         this.gameOverScreen.classList.remove('visible');
         this.uiContainer.classList.add('visible');
-        this.angleDisplay.classList.add('visible');
     }
 
     /**
@@ -256,14 +251,6 @@ class CubeCounterGame {
         this.cameraRotationAngle = (this.cameraRotationAngle + angleDelta) % 360;
         const angleRadians = (this.cameraRotationAngle * Math.PI) / 180;
         this.cubeGroup.rotation.y = angleRadians;
-        this.updateAngleDisplay();
-    }
-
-    /**
-     * Update the angle display with the current rotation angle.
-     */
-    updateAngleDisplay() {
-        this.angleDisplay.textContent = `Rotation: ${this.cameraRotationAngle}°`;
     }
 
     /**
@@ -344,11 +331,11 @@ class CubeCounterGame {
         let startValue = Math.max(1, correctAnswer - Math.floor(Math.random() * 3));
 
         for (let i = 0; options.size < 4; i++) {
-             const potentialOption = startValue + i;
-             if (potentialOption > 0) {
-                 options.add(potentialOption);
-             }
-             if (i > 10) break; // Safety break
+            const potentialOption = startValue + i;
+            if (potentialOption > 0) {
+                options.add(potentialOption);
+            }
+            if (i > 10) break; // Safety break
         }
 
         const optionsArray = Array.from(options);
@@ -371,7 +358,6 @@ class CubeCounterGame {
 
     /**
      * Clears previous cubes and renders new ones based on pileCounts.
-     * (Logic for cube creation and animation remains the same as provided)
      */
     renderCubes() {
         this.clearCubes(); // Clear previous cubes first
@@ -427,8 +413,8 @@ class CubeCounterGame {
         const angleRadians = (this.cameraRotationAngle * Math.PI) / 180;
         this.cubeGroup.rotation.y = angleRadians;
         
-        // Move the cubes to the bottom of the screen
-        this.cubeGroup.position.set(-pileSpacing / 2, -2.5, pileSpacing / 2);
+        // Move the cubes even further to the bottom of the screen
+        this.cubeGroup.position.set(-pileSpacing / 2, -4, pileSpacing / 2);
     }
 
     /**
@@ -438,11 +424,10 @@ class CubeCounterGame {
         this.levelDisplay.textContent = `Level: ${this.level}`;
         this.messageDisplay.textContent = "How many cubes in total?";
         this.scoreDisplay.textContent = `Score: ${this.score}`;
-        // High score display removed from here
         this.optionButtons.forEach((button, index) => {
             button.textContent = this.options[index];
-            button.style.backgroundColor = ''; // Reset color
-            button.disabled = false; // Enable button
+            button.style.backgroundColor = '';
+            button.disabled = false;
         });
     }
 
@@ -454,10 +439,9 @@ class CubeCounterGame {
     checkAnswer(selectedAnswer, buttonElement) {
         this.isProcessingAnswer = true;
         this.optionButtons.forEach(btn => btn.disabled = true);
-        clearInterval(this.timerInterval); // Stop timer
+        clearInterval(this.timerInterval);
 
         if (selectedAnswer === this.correctAnswer) {
-            // Correct Answer
             const roundScore = this.timer;
             this.score += roundScore;
             this.messageDisplay.textContent = `Correct! +${roundScore} points`;
@@ -465,29 +449,25 @@ class CubeCounterGame {
             this.level++;
             this.scoreDisplay.textContent = `Score: ${this.score}`;
 
-            // Proceed to next level after a short delay
             setTimeout(() => {
-                if (this.gameState === GameState.PLAYING) { // Check if game hasn't ended for other reasons
-                    this.startGame(); // Setup next level
+                if (this.gameState === GameState.PLAYING) {
+                    this.startGame();
                 }
             }, 1000);
 
         } else {
-            // Incorrect Answer - Game Over
             this.messageDisplay.textContent = `Incorrect! The answer was ${this.correctAnswer}.`;
             buttonElement.style.backgroundColor = 'salmon';
 
-            // Highlight the correct button briefly
             this.optionButtons.forEach((btn, index) => {
                 if (this.options[index] === this.correctAnswer) {
                     btn.style.backgroundColor = 'lightgreen';
                 }
             });
 
-            // Show Game Over screen after delay
             setTimeout(() => {
                 this.showGameOverScreen();
-            }, 2000); // Longer delay for incorrect
+            }, 2000);
         }
     }
 
@@ -504,7 +484,6 @@ class CubeCounterGame {
 
     /**
      * The main animation loop using requestAnimationFrame.
-     * (Logic remains the same as provided)
      */
     animate() {
         requestAnimationFrame(this.animate.bind(this));
