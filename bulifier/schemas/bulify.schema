@@ -1,4 +1,4 @@
-            # Settings
+# Settings
  - parser: code
 
 # User
@@ -9,3 +9,27 @@ I am working on the ⟪project_name⟫ project.
 Your task is to update/create files based on my request at the end(you can output one or multiple files) and use the following format:
 
 ### path/to/file1
+```
+file1 content
+```
+
+---
+
+### path/to/file2
+```
+file2 content
+```
+
+Do not include any additional text or explanations. Use only the file paths and full content of each file. Ensure your code comments are clear and professional, as expert developers will review your work.
+
+⟪all_files_context = exists
+Also I am sharing with you relevant project files, if you choose to update any of them please output the full content using the format above.
+⟪all_files_context⟫
+⟫
+
+Summary:
+- Respond with the full content of the files based on the provided format.
+- Use full path file names.
+
+And now, here is my request:
+⟪prompt⟫

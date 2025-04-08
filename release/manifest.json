@@ -1,0 +1,20 @@
+{
+    "slug": "cubes",
+    "appName": "Logic Cubes",
+    "shortDescription": "Challenge your spatial reasoning with CubeCounts 3D! Count blocks across three dimensional piles, test your perception and train your brain.",
+    "detailedDescription": "CubeCounts 3D is an engaging logic puzzle game that challenges your spatial awareness and counting abilities. In this beautifully rendered 3D environment powered by Three.js, you'll encounter three distinct piles of colorful blocks arranged in a triangular pattern.\nYour mission is simple yet challenging - count the total number of blocks across all three piles and select the correct answer from four options. With each level, the complexity increases as the number and arrangement of blocks become more intricate.\nThe game features a unique perspective where blocks are positioned at 45-degree angles to provide a true 3D challenge. The tallest pile is always positioned at the forefront, ensuring optimal visibility while still testing your spatial reasoning skills.\nCubeCounts 3D is perfect for players of all ages looking to enhance their cognitive abilities. The game trains your:\n- Visual perception and spatial awareness\n- Quick mental calculation skills\n- Pattern recognition abilities\n- Concentration and focus\nWith its intuitive controls and progressively challenging levels, CubeCounts 3D offers endless hours of brain-teasing fun. The minimalist design focuses your attention on the puzzle at hand while the smooth animations and responsive interface ensure a seamless gaming experience.\nWhether you have just a few minutes to spare or want to engage in an extended brain-training session, CubeCounts 3D adapts to your schedule. Each level presents a fresh challenge that will keep you coming back for more.\nChallenge yourself to reach higher levels and improve your spatial reasoning skills. Can you become a CubeCounts 3D master? Download now and put your perception to the test!",
+    "version": "1.0",
+    "videoLink": "",
+    "mobileControls": "Touch the screen to rotate camera view for better block visibility. Tap on number buttons to select your answer after counting all blocks across the three piles.",
+    "desktopControls": "Use mouse to drag and rotate camera view. Click number buttons to select your answer. Optional: Arrow keys can be used to slightly adjust camera angle.",
+    "developerName": "Ilya",
+    "developerWebsite": "",
+    "githubSourceCodeLink": "",
+    "genre": "Logic",
+    "keywords": "cubes,3d,logic",
+    "privacyPolicyLink": "",
+    "termsOfServiceLink": "",
+    "appIcon": "1744070869648.jpg",
+    "screenshots": "1744069334557.jpg, 1744069339071.jpg, 1744069342921.jpg",
+    "header": "1744070860839.jpg"
+}

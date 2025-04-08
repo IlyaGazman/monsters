@@ -126,9 +126,11 @@ html, body {
     text-align: center; /* Center message text */
 }
 
+/* Updated timer-display with added top padding for better placement */
 #timer-display {
     color: #2980b9; /* Blue color for timer */
     transition: color 0.3s ease;
+    padding-top: 10px;
 }
 
 #score-display {

@@ -1,4 +1,4 @@
-            # Settings
+# Settings
  - parser: release
 
 # User
@@ -26,3 +26,14 @@ content2
 
 
 Also I want to share with you some game docs for context:
+```
+⟪main_file⟫
+```
+
+Remember SEO focus, plain text and output format as fallow:
+
+field1:
+content1
+
+field2:
+content2
